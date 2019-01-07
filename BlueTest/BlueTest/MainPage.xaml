@@ -13,6 +13,9 @@
         <Button Clicked="clickMessage" Text="Send" />
 
         <Label x:Name="MainLable" />
+        <StackLayout>
+        <Label x:Name="AzimutHeading" />
+        </StackLayout>
     </StackLayout>
 
 </ContentPage>

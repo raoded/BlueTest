@@ -10,25 +10,39 @@ namespace BlueTest
     public partial class MainPage : ContentPage
     {
         Connector connection;
-
+        bool isConnected;
         public MainPage()
         {
             InitializeComponent();
             connection = DependencyService.Get<Connector>();
+            isConnected = false;
+
         }
 
         private void clickConnect(object sender, EventArgs e)
-        {         
-            bool connected = false;
+        {
+            if (connection != null && isConnected == false)
+                isConnected = connection.connect();
 
-            if (connection != null)
-                connected = connection.connect();
-
-            if (connected == false) {
-                MainLable.Text = "Unable To Connect";
+            if (isConnected == true) {
+                MainLable.Text = "Connected";              
             } else {
-                MainLable.Text = "Connected";
-            }            
+                MainLable.Text = "Unable To Connect";
+            }
+            /*
+            if (!isConnected)
+            {
+                Task.Run(async () =>
+                {
+                    while (true)
+                    {
+                        AzimutHeading.Text = await connection.RecieveAsync();
+                        await Task.Delay(1000);
+                    }
+                });
+            }
+            */
+            isConnected = true;
         }
 
         private async void clickMessage(object sender, EventArgs e)
@@ -36,13 +50,15 @@ namespace BlueTest
             string textSended = MainEntry.Text;
             string textRecieved;
 
-            while (textSended != "close")
+            textSended = MainEntry.Text;
+            connection.Send(textSended);
+
+            textRecieved = await connection.RecieveAsync();
+
+            if (textRecieved[0] > 9)
             {
-                textSended = MainEntry.Text;
-                connection.Send(textSended);
-                textRecieved = await connection.RecieveAsync();
                 MainLable.Text = textRecieved;
-            }
+            } 
         }
     }
 }

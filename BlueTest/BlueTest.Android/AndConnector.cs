@@ -56,6 +56,7 @@ namespace BlueTest.Droid
             {
                 //We initiate the communication socket with the arduino
                 btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
+                
                 //We connect the socket
                 btSocket.Connect();
                 System.Console.WriteLine("Connection Initiated");
