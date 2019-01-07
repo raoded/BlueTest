@@ -15,10 +15,10 @@ using Android.Bluetooth;
 using System.Threading.Tasks;
 using System.Text;
 
-[assembly: Dependency(typeof(AndConnector))]
+[assembly: Dependency(typeof(AndroidBTConnector))]
 namespace BlueTest.Droid
 {
-    public class AndConnector : Connector
+    public class AndroidBTConnector : Connector
     {
         //Variables para el manejo del bluetooth Adaptador y Socket
         private BluetoothAdapter mBluetoothAdapter = null;
@@ -58,7 +58,7 @@ namespace BlueTest.Droid
                 btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
                 
                 //We connect the socket
-                btSocket.ConnectAsync();
+                await btSocket.ConnectAsync();
                 System.Console.WriteLine("Connection Initiated");
             }
             catch (System.Exception e)
@@ -95,7 +95,7 @@ namespace BlueTest.Droid
         }
         
 
-        public async Task<bool> connect()
+        public async Task<bool> ConnectAsync()
         {
             return CheckBluetooth() && await InitConnection();
         }
@@ -104,12 +104,12 @@ namespace BlueTest.Droid
         {
             if (message != "")
             {
-                await writeData(message);
+                await WriteData(message);
             }
         }
 
         //Method of sending data to the bluetooth
-        private async Task writeData(string data)
+        private async Task WriteData(string data)
         {
             //We extract the output stream
             try
@@ -136,6 +136,10 @@ namespace BlueTest.Droid
             {
                 System.Console.WriteLine("Error sending" + e.Message);
             }
+        }
+
+        public Task SendAsync(string message) {
+            throw new NotImplementedException();
         }
     }
 }

@@ -19,12 +19,12 @@ namespace BlueTest
 
         }
 
-        private void clickConnect(object sender, EventArgs e)
+        private async void clickConnect(object sender, EventArgs e)
         {
             bool success = false;
 
             if (connection != null && isConnected == false)
-                success = connection.connect();
+                success = await connection.ConnectAsync();
 
             if (success == true) {
                 MainLable.Text = "Connected";              
@@ -55,7 +55,7 @@ namespace BlueTest
             string textSended = MainEntry.Text;
 
             textSended = MainEntry.Text;
-            await connection.Send(textSended);
+            await connection.SendAsync(textSended);
 
             MainLable.Text = await connection.RecieveAsync();
         }

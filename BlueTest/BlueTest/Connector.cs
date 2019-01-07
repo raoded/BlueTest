@@ -7,9 +7,9 @@ namespace BlueTest
 {
     public interface Connector
     {
-        bool connect();
+        Task<bool> ConnectAsync();
 
-        Task Send(string message);
+        Task SendAsync(string message);
 
         Task<String> RecieveAsync();
     }
