@@ -108,7 +108,7 @@ namespace BlueTest.Droid
             }
         }
 
-        public async void Send(string message)
+        public async Task Send(string message)
         {
             if (message != "")
             {

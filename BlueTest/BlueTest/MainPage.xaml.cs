@@ -48,17 +48,12 @@ namespace BlueTest
         private async void clickMessage(object sender, EventArgs e)
         {
             string textSended = MainEntry.Text;
-            string textRecieved;
+         
 
             textSended = MainEntry.Text;
-            connection.Send(textSended);
+            await connection.Send(textSended);
 
-            textRecieved = await connection.RecieveAsync();
-
-            if (textRecieved[0] > 9)
-            {
-                MainLable.Text = textRecieved;
-            } 
+           
         }
     }
 }

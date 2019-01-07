@@ -9,7 +9,7 @@ namespace BlueTest
     {
         bool connect();
 
-        void Send(string message);
+        Task Send(string message);
 
         Task<String> RecieveAsync();
     }
