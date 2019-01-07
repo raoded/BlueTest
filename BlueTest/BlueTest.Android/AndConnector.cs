@@ -112,16 +112,12 @@ namespace BlueTest.Droid
         {
             if (message != "")
             {
-                writeData(message);
-            }
-            else
-            {
-                return;
+                await writeData(message);
             }
         }
 
         //Method of sending data to the bluetooth
-        private async void writeData(string data)
+        public async void writeData(string data)
         {
             //We extract the output stream
             try
