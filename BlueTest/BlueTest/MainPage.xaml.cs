@@ -21,13 +21,15 @@ namespace BlueTest
 
         private void clickConnect(object sender, EventArgs e)
         {
-            if (connection != null && isConnected == false)
-                isConnected = connection.connect();
+            bool success = false;
 
-            if (isConnected == true) {
+            if (connection != null && isConnected == false)
+                success = connection.connect();
+
+            if (success == true) {
                 MainLable.Text = "Connected";              
             } else {
-                MainLable.Text = "Unable To Connect";
+                MainLable.Text = "Unable To Connect (Maybe u are already connected?)";
             }
             /*
             if (!isConnected)
@@ -36,8 +38,11 @@ namespace BlueTest
                 {
                     while (true)
                     {
-                        AzimutHeading.Text = await connection.RecieveAsync();
-                        await Task.Delay(1000);
+                        Device.BeginInvokeOnMainThread(async () =>
+                        {
+                            AzimutHeading.Text = await connection.RecieveAsync();
+                            await Task.Delay(1000);
+                        });
                     }
                 });
             }
@@ -48,12 +53,11 @@ namespace BlueTest
         private async void clickMessage(object sender, EventArgs e)
         {
             string textSended = MainEntry.Text;
-         
 
             textSended = MainEntry.Text;
             await connection.Send(textSended);
 
-           
+            MainLable.Text = await connection.RecieveAsync();
         }
     }
 }

@@ -31,7 +31,7 @@ namespace BlueTest.Droid
         //Unique ID for connection
         private static UUID MY_UUID = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
 
-        private bool CheckBt()
+        private bool CheckBluetooth()
         {
             //Constructing the Bluetooth device 
             mBluetoothAdapter = BluetoothAdapter.DefaultAdapter;
@@ -44,7 +44,7 @@ namespace BlueTest.Droid
             return true;
         }
 
-        private bool initiateConnection()
+        private async Task<bool> InitConnection()
         {
             //Start connecting to arduino device
             BluetoothDevice device = mBluetoothAdapter.GetRemoteDevice(address);
@@ -58,7 +58,7 @@ namespace BlueTest.Droid
                 btSocket = device.CreateRfcommSocketToServiceRecord(MY_UUID);
                 
                 //We connect the socket
-                btSocket.Connect();
+                btSocket.ConnectAsync();
                 System.Console.WriteLine("Connection Initiated");
             }
             catch (System.Exception e)
@@ -95,17 +95,9 @@ namespace BlueTest.Droid
         }
         
 
-        public bool connect()
+        public async Task<bool> connect()
         {
-            bool BTCHK = CheckBt();
-
-            if (BTCHK == false)
-            {
-                return false;
-            }
-            else {
-                return initiateConnection();
-            }
+            return CheckBluetooth() && await InitConnection();
         }
 
         public async Task Send(string message)
@@ -117,7 +109,7 @@ namespace BlueTest.Droid
         }
 
         //Method of sending data to the bluetooth
-        public async void writeData(string data)
+        private async Task writeData(string data)
         {
             //We extract the output stream
             try
