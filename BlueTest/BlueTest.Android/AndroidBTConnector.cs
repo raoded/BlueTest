@@ -85,9 +85,9 @@ namespace BlueTest.Droid
         {
             //We extract the input stream
            
-                inStream = btSocket.InputStream;
-                byte[] buffer = new byte[1024];
-                int numRead=await inStream.ReadAsync(buffer, 0, buffer.Length);
+            inStream = btSocket.InputStream;
+            byte[] buffer = new byte[1024];
+            int numRead=await inStream.ReadAsync(buffer, 0, buffer.Length);
             if (numRead > 0)
                 return System.Text.Encoding.ASCII.GetString(buffer);
             else
@@ -98,14 +98,6 @@ namespace BlueTest.Droid
         public async Task<bool> ConnectAsync()
         {
             return CheckBluetooth() && await InitConnection();
-        }
-
-        public async Task Send(string message)
-        {
-            if (message != "")
-            {
-                await WriteData(message);
-            }
         }
 
         //Method of sending data to the bluetooth
@@ -138,8 +130,10 @@ namespace BlueTest.Droid
             }
         }
 
-        public Task SendAsync(string message) {
-            throw new NotImplementedException();
+        public async Task SendAsync(string message) {
+            if (!string.IsNullOrEmpty(message)) {
+                await WriteData(message);
+            }
         }
     }
 }
