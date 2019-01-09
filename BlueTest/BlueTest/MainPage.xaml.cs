@@ -50,7 +50,9 @@ namespace BlueTest {
                     string data = await connection.RecieveAsync();
                     if (data != null) {
                         Console.Out.Flush();
-                        Console.WriteLine(data);
+                        Console.WriteLine(data+",");
+                        if(data.Length>3)
+                            Console.WriteLine("!!!!!!!!!!!!!!!!!BAD VALUE!!!!!!!!!!!!!!!!");
                     }
                     
 
