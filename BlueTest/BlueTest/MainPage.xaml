@@ -8,10 +8,10 @@
         <!-- Place new controls here -->
         <Entry x:Name="MainEntry" />
 
-        <Button Clicked="clickConnect" Text="CONNECT" />
+        <Button Clicked="ClickConnect" Text="CONNECT" />
 
-        <Button Clicked="clickMessage" Text="Send" />
-
+        <Button Clicked="ClickSend" Text="Send" />
+        <Button Clicked="ClickDisconnect" Text="Disconnect"/>
         <Label x:Name="MainLable" />
         <StackLayout>
         <Label x:Name="AzimutHeading" />

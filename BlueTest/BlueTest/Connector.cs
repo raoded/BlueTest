@@ -12,5 +12,9 @@ namespace BlueTest
         Task SendAsync(string message);
 
         Task<String> RecieveAsync();
+
+        bool Disconnect();
+
+        bool IsConnected { get; }
     }
 }
