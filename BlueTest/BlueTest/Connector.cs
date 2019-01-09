@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BlueTest
 {
-    public interface Connector
+    public interface IConnector
     {
         Task<bool> ConnectAsync();
 
@@ -13,7 +13,7 @@ namespace BlueTest
 
         Task<String> RecieveAsync();
 
-        bool Disconnect();
+        Task<bool> DisconnectAsync();
 
         bool IsConnected { get; }
     }

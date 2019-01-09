@@ -8,11 +8,11 @@ using Xamarin.Forms;
 
 namespace BlueTest {
     public partial class MainPage : ContentPage {
-        Connector connection;
+        IConnector connection;
         bool isListening;
         public MainPage() {
             InitializeComponent();
-            connection = DependencyService.Get<Connector>();
+            connection = DependencyService.Get<IConnector>();
             isListening = false;
         }
 
@@ -37,23 +37,28 @@ namespace BlueTest {
             }
 
         }
-
+        
         private async Task ListenOnDevice() {
             await Task.Run(async () => {
                 while (true) {
                     Thread.Sleep(500);
                     /*
-                    Device.BeginInvokeOnMainThread(async () => {
-                        AzimutHeading.Text ="azimuth:"+ await connection.RecieveAsync();
-                    });
-                    */
-                    Console.Out.Flush();
-                    Console.WriteLine(await connection.RecieveAsync());
+                      Device.BeginInvokeOnMainThread(async () => {
+                          AzimutHeading.Text ="azimuth:"+ await connection.RecieveAsync();
+                      });
+                      */
+                    string data = await connection.RecieveAsync();
+                    if (data != null) {
+                        Console.Out.Flush();
+                        Console.WriteLine(data);
+                    }
+                    
 
                 }
             });
             isListening = true;
         }
+        
 
         private async void ClickSend(object sender, EventArgs e) {
             string textSended = MainEntry.Text;
@@ -64,8 +69,8 @@ namespace BlueTest {
             //MainLable.Text = await connection.RecieveAsync();
         }
 
-        private void ClickDisconnect(object sender, EventArgs e) {
-            if (connection.Disconnect()) {
+        private async void ClickDisconnect(object sender, EventArgs e) {
+            if (await connection.DisconnectAsync()) {
                 MainLable.Text = "Disconnected";
             } else {
                 MainLable.Text = "Failed to Disconnect";
