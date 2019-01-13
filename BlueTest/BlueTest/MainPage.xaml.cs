@@ -64,11 +64,7 @@ namespace BlueTest {
 
         private async void ClickSend(object sender, EventArgs e) {
             string textSended = MainEntry.Text;
-
-            textSended = MainEntry.Text;
             await connection.SendAsync(textSended);
-
-            //MainLable.Text = await connection.RecieveAsync();
         }
 
         private async void ClickDisconnect(object sender, EventArgs e) {

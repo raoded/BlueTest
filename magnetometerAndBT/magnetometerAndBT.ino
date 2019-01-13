@@ -18,23 +18,10 @@ void setup() {
   Wire.begin();
   qmc.init();
   Serial.println("ALL SET!");
-
-}
-
-void readColor() {
-  char c;
-  c = (char)hc.read();
-
-  Serial.println(c);
-
-  if (c == 'Y') {
-    hc.write('N');
-  }
-  if (c == 'N') {
-    hc.write('Y');
+  if (hc.isListening()) {
+    Serial.println("Bluetooth is listening");
   }
 }
-
 void printHeading() {
   /* Get a new sensor event */
   int x, y, z;
@@ -58,9 +45,15 @@ void printHeading() {
   hc.flush();
   delay(500);
 }
-
+void readTurn() {
+  if (hc.available()) {
+    char c = (char)hc.read();
+    Serial.println(c);
+  }
+}
 void loop() {
   // put your main code here, to run repeatedly:
   //readColor();
+  readTurn();
   printHeading();
 }
