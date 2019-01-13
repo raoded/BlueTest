@@ -1,6 +1,10 @@
 #include<SoftwareSerial.h>
-const int rxPin = 5;
-const int txPin = 6;
+const int rightPin = 12;
+const int leftPin = 11;
+const int continuePin = 10;
+const int rxPin = 6;
+const int txPin = 5;
+bool isContinue;
 SoftwareSerial hc = SoftwareSerial(rxPin, txPin);
 
 #include <Wire.h>
@@ -10,7 +14,79 @@ SoftwareSerial hc = SoftwareSerial(rxPin, txPin);
 // SDA=A4, SCL=A5
 MechaQMC5883 qmc;
 
+void initVibrationMotors() {
+  pinMode(rightPin, OUTPUT);
+  pinMode(leftPin, OUTPUT);
+  pinMode(continuePin, OUTPUT);
+}
+
+void vib(int pin) {
+  digitalWrite(pin, HIGH);
+  delay(500);
+  digitalWrite(pin, LOW);
+}
+
+void getDiraction() {
+  char c;
+  if (hc.available()) {
+    c = (char)hc.read();
+  }
+  else {
+    return;
+  }
+  //forward only
+  if (c == '3' && isContinue ) {
+    vib(continuePin);
+    isContinue = false;
+  }
+  // "hard" left
+  if (c == '6') {
+    vib(rightPin);
+    isContinue = true;
+  }
+  // "hard" right
+  if (c == '0') {
+    vib(leftPin);
+    isContinue = true;
+  }
+  // "softer" right
+  if (c == '4') {
+    vib(continuePin);
+    delay(200);
+    vib(rightPin);
+    isContinue = true;
+  }
+  // "soft" right
+  if (c == '5') {
+    vib(continuePin);
+    delay(200);
+    vib(rightPin);
+    delay(200);
+    vib(rightPin);
+    isContinue = true;
+  }
+  // "softer" left
+  if (c == '1') {
+    vib(continuePin);
+    delay(200);
+    vib(leftPin);
+    delay(200);
+    vib(leftPin);
+    isContinue = true;
+  }
+  // "soft" left
+  if (c == '2') {
+    vib(continuePin);
+    delay(200);
+    vib(leftPin);
+    isContinue = true;
+  }
+}
+
+
 void setup() {
+  initVibrationMotors();
+  isContinue = true;
   // put your setup code here, to run once:
   hc.begin(9600); //init bluetooth
   Serial.begin(9600);
@@ -22,6 +98,8 @@ void setup() {
     Serial.println("Bluetooth is listening");
   }
 }
+
+
 void printHeading() {
   /* Get a new sensor event */
   int x, y, z;
@@ -51,9 +129,11 @@ void readTurn() {
     Serial.println(c);
   }
 }
+
+
 void loop() {
   // put your main code here, to run repeatedly:
-  //readColor();
   readTurn();
   printHeading();
+  getDiraction();
 }
