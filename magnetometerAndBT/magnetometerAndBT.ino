@@ -39,12 +39,12 @@ void getDiraction() {
     vib(continuePin);
     isContinue = false;
   }
-  // "hard" left
+  // "hard" right
   if (c == '6') {
     vib(rightPin);
     isContinue = true;
   }
-  // "hard" right
+  // "hard" left
   if (c == '0') {
     vib(leftPin);
     isContinue = true;
@@ -65,7 +65,7 @@ void getDiraction() {
     vib(rightPin);
     isContinue = true;
   }
-  // "softer" left
+  // "soft" left
   if (c == '1') {
     vib(continuePin);
     delay(200);
@@ -74,7 +74,7 @@ void getDiraction() {
     vib(leftPin);
     isContinue = true;
   }
-  // "soft" left
+  // "softer" left
   if (c == '2') {
     vib(continuePin);
     delay(200);
@@ -100,7 +100,7 @@ void setup() {
 }
 
 
-void printHeading() {
+void sendAzimuth() {
   /* Get a new sensor event */
   int x, y, z;
   qmc.read(&x, &y, &z);
@@ -117,23 +117,15 @@ void printHeading() {
   }
   int azimuth = heading;
   String data = "(" + String(azimuth) + ")";
-  Serial.print("Compass Heading: ");
-  Serial.println(data);
+  //Serial.print("Compass Heading: ");
+  //Serial.println(data);
   hc.print(data);
   hc.flush();
   delay(500);
 }
-void readTurn() {
-  if (hc.available()) {
-    char c = (char)hc.read();
-    Serial.println(c);
-  }
-}
-
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  readTurn();
-  printHeading();
+  sendAzimuth();
   getDiraction();
+
 }
