@@ -1,7 +1,7 @@
 #include<SoftwareSerial.h>
-const int rightPin = 12;
-const int leftPin = 11;
-const int continuePin = 10;
+const int rightPin = A0;
+const int leftPin = A2;
+const int continuePin = A1;
 const int rxPin = 6;
 const int txPin = 5;
 bool isContinue;
@@ -10,7 +10,6 @@ SoftwareSerial hc = SoftwareSerial(rxPin, txPin);
 #include <Wire.h>
 #include <MechaQMC5883.h>
 
-/* Assign a unique ID to this sensor at the same time */
 // SDA=A4, SCL=A5
 MechaQMC5883 qmc;
 
@@ -21,15 +20,22 @@ void initVibrationMotors() {
 }
 
 void vib(int pin) {
-  digitalWrite(pin, HIGH);
-  delay(500);
-  digitalWrite(pin, LOW);
+  for(int POWER=0;POWER<=255;POWER++){
+    analogWrite(pin, POWER);
+    delay(1);
+  }
+  delay(250);
+  for(int POWER=255;POWER>=0;POWER--){
+    analogWrite(pin, POWER);
+    delay(1);
+  }
 }
 
 void getDiraction() {
   char c;
   if (hc.available()) {
     c = (char)hc.read();
+    Serial.println(c);
   }
   else {
     return;
@@ -52,32 +58,32 @@ void getDiraction() {
   // "softer" right
   if (c == '4') {
     vib(continuePin);
-    delay(200);
+    //delay(50);
     vib(rightPin);
     isContinue = true;
   }
   // "soft" right
   if (c == '5') {
     vib(continuePin);
-    delay(200);
+    //delay(200);
     vib(rightPin);
-    delay(200);
+    //delay(200);
     vib(rightPin);
     isContinue = true;
   }
   // "soft" left
   if (c == '1') {
     vib(continuePin);
-    delay(200);
+    //delay(200);
     vib(leftPin);
-    delay(200);
+    //delay(200);
     vib(leftPin);
     isContinue = true;
   }
   // "softer" left
   if (c == '2') {
     vib(continuePin);
-    delay(200);
+    //delay(200);
     vib(leftPin);
     isContinue = true;
   }
@@ -117,8 +123,8 @@ void sendAzimuth() {
   }
   int azimuth = heading;
   String data = "(" + String(azimuth) + ")";
-  //Serial.print("Compass Heading: ");
-  //Serial.println(data);
+  Serial.print("Compass Heading: ");
+  Serial.println(data);
   hc.print(data);
   hc.flush();
   delay(500);
@@ -127,5 +133,6 @@ void sendAzimuth() {
 void loop() {
   sendAzimuth();
   getDiraction();
+  hc.println("");
 
 }
